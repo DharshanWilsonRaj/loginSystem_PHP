@@ -2,22 +2,24 @@
 
 require_once __DIR__ . "../../../includes/db.php";
 
-
 if (isset($_POST['submit'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    $duplicate = mysqli_query($conn, "SELECT * FROM usersDetatils WHERE email = '$email'");
+    if (!empty($username) && !empty($email) && !empty($password)) {
+        $duplicate = mysqli_query($conn, "SELECT * FROM usersDetatils WHERE email = '$email'");
 
-    if (mysqli_num_rows($duplicate) > 0) {
-        echo "<script>alert('Email is already exist')</script>";
-    } else {
-        $query = "INSERT INTO usersDetatils (username, email, password) VALUES ('$username', '$email', '$password')";
-        if (mysqli_query($conn, $query)) {
-            echo "<script>" . "window.location.href='/phpProject1/pages/login/login.php';" . "</script>";
+        if (mysqli_num_rows($duplicate) > 0) {
+            echo "<script>alert('Email is already exist')</script>";
         } else {
-            echo "<script>alert('Error in registration')</script>";
+            $password  = md5($password);
+            $query = "INSERT INTO usersDetatils (username, email, password) VALUES ('$username', '$email', '$password')";
+            if (mysqli_query($conn, $query)) {
+                header("Location: /phpProject1/index.php");
+            } else {
+                echo "<script>alert('Error in registration')</script>";
+            }
         }
     }
 }

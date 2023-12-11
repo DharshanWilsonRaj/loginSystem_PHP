@@ -7,8 +7,6 @@ if (isset($_POST['login_submit'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-
-
     if (!empty($email) && !empty($password)) {
         $password = md5($password);
         $query = mysqli_query($conn, "SELECT id FROM usersDetatils WHERE email = '$email' and password='$password'");
